@@ -26,7 +26,7 @@ function App() {
       .then((data) => {
         setPhotos((oldphotos) => {
           if (query && page === 1) {
-            return data.results;
+            return [...data.results];
           } else if (query) {
             return [...oldphotos, ...data.results];
           } else {
@@ -38,11 +38,14 @@ function App() {
 
   useEffect(() => {
     fetchingImages();
-  }, [page, query]);
+  }, [page]);
 
   useEffect(() => {
     const event = window.addEventListener("scroll", () => {
-      if (window.scrollY + window.innerHeight >= document.body.scrollHeight) {
+      if (
+        window.scrollY + window.innerHeight >=
+        document.body.scrollHeight - 100
+      ) {
         setPage((oldpage) => {
           return oldpage + 1;
         });
@@ -54,6 +57,9 @@ function App() {
   const handleSubmit = (e) => {
     e.preventDefault();
     setPage(1);
+    if (query && page === 1) {
+      fetchingImages(query);
+    }
   };
 
   return (
